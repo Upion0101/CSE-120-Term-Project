@@ -87,3 +87,37 @@ start_button.pack()
 
 # Run the GUI event loop
 window.mainloop()
+
+'''
+root = tk.Tk()
+menu = tk.Menu(root)
+
+root.geometry("500x500")
+root.title("Platform Game")
+
+
+x = tk.Label(root, text="Welcome to Platform!", font=('Arial', 18))
+x.pack(padx=20, pady=20)
+
+
+widgets.destroy()
+rules = 'This is where rules will display'
+rulesmessage = tk.Message(root, text=rules, width=20)
+rulesmessage.pack()
+
+
+widgets.destroy()
+y = tk.Label(root, text='Enter name:', )
+y.pack(pady=10)
+usersname = tk.Entry(root)
+usersname.pack()
+
+startbutton = tk.Button(homeframe, text='Start Game', width=25, command=rungame)
+startbutton.pack()
+
+rulesbutton = tk.Button(homeframe, text='See Rules', width=25, command=runrules)
+rulesbutton.pack()
+
+root.mainloop()
+
+'''
