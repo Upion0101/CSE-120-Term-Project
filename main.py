@@ -85,60 +85,68 @@ def rungame():
     canvas.create_oval(240, 50, 140, 155, fill="gold", outline="gold")
     # rightside,top,left,bottom,
 
+    # clouds
+    # middle_lefttop_cloud
+    canvas.create_oval(200, 68, 120, 75, fill="papaya whip", outline="papaya whip")
+    # rightside,top,left,bottom
+    # middle_rightbottom_cloud
+    canvas.create_oval(230, 73, 155, 80, fill="papaya whip", outline="papaya whip")
+    # middle_leftbottom_cloud
+    canvas.create_oval(190, 73, 125, 80, fill="papaya whip", outline="papaya whip")
+    # middle_bottom_cloud
+    canvas.create_oval(210, 76, 140, 85, fill="papaya whip", outline="papaya whip")
+    # left_bottom_cloud
+    canvas.create_oval(65, 58, -20, 65, fill="papaya whip", outline="papaya whip")
+    # left_middle_cloud
+    canvas.create_oval(45, 50, -20, 61, fill="papaya whip", outline="papaya whip")
+    # left_middletop_cloud
+    canvas.create_oval(30, 45, -20, 54, fill="papaya whip", outline="papaya whip")
+    # left_top_cloud
+    canvas.create_oval(20, 40, -20, 50, fill="papaya whip", outline="papaya whip")
+    # right_middle_cloud
+    canvas.create_oval(390, 35, 310, 42, fill="papaya whip", outline="papaya whip")
+    # right_bottom_cloud
+    canvas.create_oval(410, 30, 330, 38, fill="papaya whip", outline="papaya whip")
+    # right_top_cloud
+    canvas.create_oval(410, 25, 350, 35, fill="papaya whip", outline="papaya whip")
+
     # Light Purple Mountains
     # *******************************
     # lightpurp_mostleft_mount
-    canvas.create_polygon(130, 410, -100, 410, 30, 50, fill="#8F8FBC", outline="#8F8FBC")
+    canvas.create_polygon(120, 410, -100, 410, 30, 50, fill="#8F8FBC", outline="#8F8FBC")
     # right corner, left corner, top corner^^
-    # lightpurp_right_mount
+    # lightpurp_left_mount
     canvas.create_polygon(250, 410, 50, 410, 150, 100, fill="#8F8FBC", outline="#8F8FBC")
-    # lightpurp_rightslope_mount
+    # lightpurp_leftslope_mount
     canvas.create_polygon(250, 410, 100, 410, 180, 150, fill="#8F8FBC", outline="#8F8FBC")
     # lightpurp_middle_mount
     canvas.create_polygon(330, 410, 150, 410, 238, 120, fill="#8F8FBC", outline="#8F8FBC")
-    # lightpurp_left_mount
+    # lightpurp_right_mount
     canvas.create_polygon(410, 410, 230, 410, 310, 70, fill="#8F8FBC", outline="#8F8FBC")
+    # lightpurp_mostright_mount
+    canvas.create_polygon(460, 410, 260, 410, 360, 135, fill="#8F8FBC", outline="#8F8FBC")
 
     # Mid Purple Mountains
     # *******************************
     # midpurp_left1_mount
-    canvas.create_polygon(230, 410, 50, 410, 130, 170, fill="darkslateblue", outline="darkslateblue")
+    canvas.create_polygon(120, 410, -20, 410, 55, 125, fill="darkslateblue", outline="darkslateblue")
     # right corner, left corner, top corner^^
-    # midpurp_left1_slope_mount
-    canvas.create_polygon(230, 410, 30, 410, 115, 190, fill="darkslateblue", outline="darkslateblue")
-    # 3 mountains on right info below
-    # midpurp_left_mount
-    canvas.create_polygon(310, 410, 180, 410, 240, 140, fill="darkslateblue", outline="darkslateblue")
+    # midpurp_left2_mount
+    canvas.create_polygon(230, 410, 30, 410, 120, 190, fill="darkslateblue", outline="darkslateblue")
+    # midpurp_left2_slope2_mount
+    canvas.create_polygon(250, 410, 70, 410, 160, 230, fill="darkslateblue", outline="darkslateblue")
+    # midpurp_left3_mount
+    canvas.create_polygon(310, 410, 180, 410, 240, 160, fill="darkslateblue", outline="darkslateblue")
     # midpurp_middle_mount
-    canvas.create_polygon(340, 410, 230, 410, 280, 150, fill="darkslateblue", outline="darkslateblue")
+    canvas.create_polygon(340, 410, 230, 410, 280, 120, fill="darkslateblue", outline="darkslateblue")
     # midpurp_right_mount
     canvas.create_polygon(370, 410, 250, 410, 310, 200, fill="darkslateblue", outline="darkslateblue")
-
-    # Dark Purple Mountains
-    # *******************************
-    # darkpurp_mostleft_mount
-    canvas.create_polygon(100, 410, -60, 410, 30, 150, fill="#10104E", outline="#10104E")
-    # right corner, left corner, top corner^^
-    # darkpurp_left_mount
-    canvas.create_polygon(130, 410, 2, 410, 66, 170, fill="#10104E", outline="#10104E")
-    # darkpurp_lefttrec
-    canvas.create_rectangle(80, 410, 190, 260, fill="#10104E", outline="#10104E")
-    # leftside, bottom, rightside, top^^
-    # darkpurp_middle_mount
-    canvas.create_polygon(250, 410, 150, 410, 200, 100, fill="#10104E", outline="#10104E")
-    # darkpurp_middle_rightslope_mount
-    canvas.create_polygon(300, 410, 200, 410, 200, 350, fill="#10104E", outline="#10104E")
-    # darkpurp_rightrect
-    canvas.create_rectangle(340, 410, 200, 310, fill="#10104E", outline="#10104E")
-    # rightside, bottom, leftside, top^^
-    # darkpurp_rightslope_mount
-    canvas.create_polygon(300, 410, 200, 410, 200, 250, fill="#10104E", outline="#10104E")
-    # darkpurp_right_mount
-    canvas.create_polygon(405, 410, 310, 410, 405, 20, fill="#10104E", outline="#10104E")
+    # midpurp_mostright_mount
+    canvas.create_polygon(435, 410, 280, 410, 350, 250, fill="darkslateblue", outline="darkslateblue")
     # the end of background art scene
 
     # Create the player
-    player = canvas.create_oval(170, 350, 220, 400, fill="blue", outline="blue")
+    player = canvas.create_oval(170, 350, 220, 400, fill="blue", outline="white")
 
     # Create a list to store the obstacle objects
     obstacles = []
@@ -182,3 +190,4 @@ if __name__ == '__main__':
     # End of the code to center window for user
 
     root.mainloop()
+
