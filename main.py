@@ -1,6 +1,8 @@
 import tkinter as tk
 import random
 
+player_dy = 0
+score = 0
 
 def runrules():
     # Removes the welcome page and displays the rules
@@ -16,24 +18,17 @@ def runrules():
     goback_button.pack(padx=10, pady=10)
 
 
+
+
 def rungame():
-    def jump(event):
-        """Makes the player jump."""
-        canvas.move(player, 0, -75)  # Move the player up
-        canvas.after(300, fall)  # Schedule the player to fall after a longer delay
-
-    def fall():
-        """Makes the player fall down after a jump."""
-        canvas.move(player, 0, 75)  # Move the player down
-
     def check_collision():
         """Checks if there is a collision between the player and any of the obstacles."""
-        player_pos = canvas.coords(player)
+        player_bbox = canvas.bbox(player)
         for obstacle in obstacles:
-            obstacle_pos = canvas.coords(obstacle)
-            if player_pos[1] < obstacle_pos[3] and player_pos[3] > obstacle_pos[1]:  # compare vertical overlap
-                if player_pos[2] > obstacle_pos[0] and player_pos[0] < obstacle_pos[2]:  # compare horizntal overlap
-                    return True
+            obstacle_bbox = canvas.bbox(obstacle)
+            if player_bbox[2] >= obstacle_bbox[0] and player_bbox[0] <= obstacle_bbox[2] and \
+                    player_bbox[3] >= obstacle_bbox[1] and player_bbox[1] <= obstacle_bbox[3]:
+                return True
         return False
 
     def create_obstacle():
@@ -43,14 +38,33 @@ def rungame():
         triangle_height = 50  # Adjust the triangle height as desired
         obstacle = canvas.create_polygon(
             x, y_base - triangle_height,  # Tip
-            x - 20, y_base,  # Left corner
-            x + 20, y_base,  # Right corner
+               x - 20, y_base,  # Left corner
+               x + 20, y_base,  # Right corner
             fill="red"
         )
         obstacles.append(obstacle)
 
+    def jump(event):
+        """Makes the player jump."""
+        global player_dy
+        player_dy = -7  # Adjust the jump height as desired
+
+    def fall():
+        """Makes the player fall down after a jump."""
+        global player_dy
+        player_pos = canvas.coords(player)
+        canvas.move(player, 0, player_dy)
+        player_dy += 1  # Adjust the fall speed as desired
+
+        if player_pos[3] >= canvas.winfo_height():
+            canvas.move(player, 0, canvas.winfo_height() - player_pos[3])
+            player_dy = 0
+
+        canvas.after(200, fall)  # Schedule the next fall after a delay
+
     def update_game():
         """Updates the game state."""
+
         if check_collision():
             canvas.unbind("<space>")
             canvas.create_text(200, 200, text="Game Over", font=("Helvetica", 24), fill="red")
@@ -70,16 +84,24 @@ def rungame():
             if obstacle_pos[2] < 0:
                 canvas.delete(obstacle)
                 obstacles.remove(obstacle)
+                global score
+                score +=1
+                print(score)
 
         if random.randint(1, 10) == 1:
             create_obstacle()
 
+        canvas.move(player, 0, player_dy)
         canvas.after(50, update_game)  # Adjust the delay between game updates (lower value for faster updates)
 
     def start_game():
         """Starts the game by hiding the start menu and starting the game loop."""
+
+        player_velocity = [0]  # Store player's velocity as a list
+
         start_button.pack_forget()
         canvas.bind("<space>", jump)
+        fall()
         update_game()
 
     # Create the canvas
