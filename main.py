@@ -3,12 +3,14 @@ import random
 
 
 def runrules():
+    # Removes the welcome page and displays the rules
     welcomecanvas.pack_forget()
     rules_canvas = tk.Canvas(root, width=400, height=300)
     rules_canvas.pack()
-    rules = 'This is where rules will display'
+    rules = 'Press <Space> to jump over obstacles'
     rulesmessage = tk.Message(rules_canvas, text=rules)
     rulesmessage.pack()
+    # Creates the go back button on the rules page
     goback_button = tk.Button(rules_canvas, text='Go Back', width=25, command=lambda: [rules_canvas.pack_forget(),
                                                                                        welcomecanvas.pack()])
     goback_button.pack(padx=10, pady=10)
@@ -52,6 +54,13 @@ def rungame():
         if check_collision():
             canvas.unbind("<space>")
             canvas.create_text(200, 200, text="Game Over", font=("Helvetica", 24), fill="red")
+            playagain_button = tk.Button(root, text='Play Again', width=25, command=lambda: [canvas.pack_forget(),
+                                                                                             rungame(),
+                                                                                             playagain_button.pack_forget(),
+                                                                                             exit_button.pack_forget()])
+            playagain_button.pack()
+            exit_button = tk.Button(root, text='Exit', width=25, command=root.destroy)
+            exit_button.pack()
             return
 
         for obstacle in obstacles:
@@ -159,21 +168,27 @@ def rungame():
 
 
 if __name__ == '__main__':
+    # Creates main window for the game, rules, and welcome page canvas
     root = tk.Tk()
     root.geometry("500x500")
     root.title("Mountain Jump Game")
+
+    # Creates the canvas that the homepage(buttons and welcome) will appear on
     welcomecanvas = tk.Canvas(root, width=400, height=400)
     welcomecanvas.pack()
 
+    # Creates the title on homepage
     d = tk.Label(welcomecanvas, text="Welcome to Mountain Jump!", font=('Arial', 18))
-    d.pack(padx=10, pady=10)
+    d.pack(pady=40)
 
+    # Creates start game button
     strt_button = tk.Button(welcomecanvas, text='Start Game', width=25, command=lambda: [rungame(),
                                                                                          welcomecanvas.pack_forget()])
-    strt_button.pack()
+    strt_button.pack(pady=5)
 
+    # Creates see rules button
     rules_button = tk.Button(welcomecanvas, text='See Rules', width=25, command=runrules)
-    rules_button.pack()
+    rules_button.pack(pady=5)
 
     # code below puts window in middle for user-- if this doesnt happen let me know
     width = 500  # Width
@@ -190,4 +205,3 @@ if __name__ == '__main__':
     # End of the code to center window for user
 
     root.mainloop()
-
