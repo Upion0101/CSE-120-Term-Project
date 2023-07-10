@@ -3,6 +3,7 @@ import random
 
 
 score = 0
+player_dy = 0
 
 def runrules():
     # Removes the welcome page and displays the rules
@@ -46,12 +47,23 @@ def rungame():
 
     def jump(event):
         """Makes the player jump."""
+        global player_dy
+        player_dy = -7  # Adjust the jump height as desired
         canvas.move(player, 0, -75)  # Move the player up
         canvas.after(400, fall)  # Schedule the player to fall after a longer delay
 
     def fall():
         """Makes the player fall down after a jump."""
-        canvas.move(player, 0, 75)  # Move the player down
+        global player_dy
+        player_pos = canvas.coords(player)
+        canvas.move(player, 0, player_dy)
+        player_dy += 1  # Adjust the fall speed as desired
+
+        if player_pos[3] >= canvas.winfo_height():
+            canvas.move(player, 0, canvas.winfo_height() - player_pos[3])
+            player_dy = 0
+
+        canvas.after(200, fall)  # Schedule the next fall after a delay
 
     def update_game():
         """Updates the game state."""
@@ -81,7 +93,7 @@ def rungame():
 
         if random.randint(1, 10) == 1:
             create_obstacle()
-
+        canvas.move(player, 0, player_dy)
         canvas.after(50, update_game)  # Adjust the delay between game updates (lower value for faster updates)
 
     def start_game():
@@ -91,6 +103,7 @@ def rungame():
 
         start_button.pack_forget()
         canvas.bind("<space>", jump)
+        fall()
         update_game()
 
     # Create the canvas
