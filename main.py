@@ -1,74 +1,64 @@
 import tkinter as tk
 import random
+import time
+from welcome import opening_bg
+from game_canvas import create_game_canvas
 
 score = 0
 player_dy = 0
-
-
-def opening_bg(canvas2):
-
-    # dark purple mountains left to right
-    canvas2.create_rectangle(0, 200, 500, 300, outline="darkslateblue", fill="darkslateblue", width=2)
-    canvas2.create_polygon(-150, 200, 0, 50, 50, 200, fill="darkslateblue", outline="darkslateblue")
-    canvas2.create_polygon(0, 200, 50, 80, 100, 200, fill="darkslateblue", outline="darkslateblue")
-    canvas2.create_polygon(100, 200, 175, 30, 250, 200, fill="darkslateblue", outline="darkslateblue")
-    canvas2.create_polygon(230, 200, 280, 60, 330, 200, fill="darkslateblue", outline="darkslateblue")
-    canvas2.create_polygon(245, 200, 295, 80, 355, 200, fill="darkslateblue", outline="darkslateblue")
-    canvas2.create_polygon(355, 200, 413, 20, 470, 200, fill="darkslateblue", outline="darkslateblue")
-    canvas2.create_polygon(450, 200, 500, 60, 550, 200, fill="darkslateblue", outline="darkslateblue")
-    # light purple mountains left to right
-    canvas2.create_rectangle(0, 205, 500, 500, outline="#8F8FBC", fill="#8F8FBC", width=2)
-    canvas2.create_polygon(-30, 205, 20, 100, 70, 205, fill="#8F8FBC", outline="#8F8FBC")
-    canvas2.create_polygon(50, 205, 100, 120, 150, 205, fill="#8F8FBC", outline="#8F8FBC")
-    canvas2.create_polygon(150, 205, 200, 110, 250, 205, fill="#8F8FBC", outline="#8F8FBC")
-    canvas2.create_polygon(180, 205, 230, 90, 280, 205, fill="#8F8FBC", outline="#8F8FBC")
-    canvas2.create_polygon(250, 205, 300, 125, 350, 205, fill="#8F8FBC", outline="#8F8FBC")
-    canvas2.create_polygon(325, 205, 375, 90, 425, 205, fill="#8F8FBC", outline="#8F8FBC")
-    canvas2.create_polygon(405, 205, 477, 90, 550, 205, fill="#8F8FBC", outline="#8F8FBC")
-    # sun and clouds
-    canvas2.create_oval(40, 30, 85, 75, outline="gold", fill="gold", width=2)
-    canvas2.create_oval(0, 50, 50, 55, fill="papaya whip", outline="papaya whip")
-    canvas2.create_oval(25, 55, 60, 60, fill="papaya whip", outline="papaya whip")
-    canvas2.create_oval(200, 68, 120, 75, fill="papaya whip", outline="papaya whip")
-    canvas2.create_oval(130, 72, 240, 78, fill="papaya whip", outline="papaya whip")
-    canvas2.create_oval(300, 72, 370, 78, fill="papaya whip", outline="papaya whip")
-    canvas2.create_oval(310, 70, 380, 72, fill="papaya whip", outline="papaya whip")
-    # first green dark green hill
-    canvas2.create_oval(-50, 300, 150, 578, fill="dark green", outline="dark green")
-    # overlap green hill on left
-    canvas2.create_oval(50, 320, 250, 478, fill="dark green", outline="dark green")
-    # right green hill
-    canvas2.create_oval(230, 578, 550, 320, fill="dark green", outline="dark green")
-    # bottom light green hill
-    canvas2.create_oval(-50, 415, 550, 600, fill="forest green", outline="forest green")
-    # river
-    coord = 235, 415, 265, 415, 310, 500, 190, 500
-    arc = canvas2.create_polygon(coord, fill="skyblue", outline="skyblue")
-
-
+obstacle_frequency = 1000  # Initial obstacle frequency (1 obstacle per second)
+max_obstacle_frequency = 500  # Maximum obstacle frequency (0.5 obstacles per second)
+last_obstacle_time = 0
+jump_height = -10
+fall_speed = 1
 def runrules():
     # Removes the welcome page and displays the rules
     welcomecanvas.pack_forget()
     rules_canvas = tk.Canvas(root, bg="skyblue")
     rules_canvas.pack(fill=tk.BOTH, expand=True)
     rules = 'Press <Space> to jump over obstacles'
-    rulesmessage = tk.Message(rules_canvas, text=rules,  font=("Comic Sans MS", 16))
+    rulesmessage = tk.Message(rules_canvas, text=rules, font=("Comic Sans MS", 16))
     rulesmessage.pack(pady=(120, 60))
     # Creates the go back button on the rules page
-    goback_button = tk.Button(rules_canvas, text='Go Back',  font=("Comic Sans MS", 14), width=15, height=2,
-    command=lambda: [rules_canvas.pack_forget(), welcomecanvas.pack(fill=tk.BOTH, expand=True),
-                     opening_bg(welcomecanvas)])
+    goback_button = tk.Button(
+        rules_canvas,
+        text='Go Back',
+        font=("Comic Sans MS", 14),
+        width=15,
+        height=2,
+        command=lambda: [rules_canvas.pack_forget(), welcomecanvas.pack(fill=tk.BOTH, expand=True),
+                         opening_bg(welcomecanvas)],
+    )
     goback_button.pack(padx=10, pady=10)
 
-
 def rungame():
+    start_time = time.time()
+    last_obstacle_time = start_time
+
     def check_collision():
         """Checks if there is a collision between the player and any of the obstacles."""
         player_bbox = canvas.bbox(player)
+        #makes the hiboxes smaller
+        player_hitbox = [
+            player_bbox[0] + 10,
+            player_bbox[1] + 10,
+            player_bbox[2] - 10,
+            player_bbox[3] - 10
+        ]
         for obstacle in obstacles:
             obstacle_bbox = canvas.bbox(obstacle)
-            if player_bbox[2] >= obstacle_bbox[0] and player_bbox[0] <= obstacle_bbox[2] and \
-                    player_bbox[3] >= obstacle_bbox[1] and player_bbox[1] <= obstacle_bbox[3]:
+            obstacle_hitbox = [
+                obstacle_bbox[0] + 10,
+                obstacle_bbox[1] + 10,
+                obstacle_bbox[2] - 10,
+                obstacle_bbox[3] - 10
+            ]
+            if (
+                    player_hitbox[2] >= obstacle_hitbox[0] and
+                    player_hitbox[0] <= obstacle_hitbox[2] and
+                    player_hitbox[3] >= obstacle_hitbox[1] and
+                    player_hitbox[1] <= obstacle_hitbox[3]
+            ):
                 return True
         return False
 
@@ -79,50 +69,93 @@ def rungame():
         triangle_height = 50  # Adjust the triangle height as desired
         obstacle = canvas.create_polygon(
             x, y_base - triangle_height,  # Tip
-               x - 20, y_base,  # Left corner
-               x + 20, y_base,  # Right corner
-            fill="red"
+            x - 20, y_base,  # Left corner
+            x + 20, y_base,  # Right corner
+            fill="red",
         )
         obstacles.append(obstacle)
 
     def jump(event):
         """Makes the player jump."""
         global player_dy
-        player_dy = -7  # Adjust the jump height as desired
-        canvas.move(player, 0, -75)  # Move the player up
-        canvas.after(400, fall)  # Schedule the player to fall after a longer delay
+        player_pos = canvas.coords(player)
+        if player_pos[3] == canvas.winfo_height():
+            player_dy = jump_height
+            canvas.move(player, 0, player_dy)
+
 
     def fall():
         """Makes the player fall down after a jump."""
         global player_dy
         player_pos = canvas.coords(player)
         canvas.move(player, 0, player_dy)
-        player_dy += 1  # Adjust the fall speed as desired
+        player_dy += fall_speed
 
         if player_pos[3] >= canvas.winfo_height():
             canvas.move(player, 0, canvas.winfo_height() - player_pos[3])
             player_dy = 0
 
-        canvas.after(200, fall)  # Schedule the next fall after a delay
+        canvas.after(20, fall)  # Schedule the next fall after a delay
 
     def update_game():
         """Updates the game state."""
-        global score
+        global score, obstacle_frequency, last_obstacle_time
+        current_time = time.time()
+        elapsed_time = current_time - start_time
+
         if check_collision():
             canvas.unbind("<space>")
-            canvas.create_text(200, 230, text="G a m e o v e r", fill="lemon chiffon", font=("Comic Sans MS", 30))
-            canvas.create_text(190, 280, text="Your score is", font=("Comic Sans MS", 20),
-                               fill="lemon chiffon")
-            canvas.create_text(275, 280, text=" ͟ ͟", font=("Comic Sans MS", 20), fill="lemon chiffon")
-            canvas.create_text(275, 280, text="" + str(score), font=("Comic Sans MS", 20), fill="lemon chiffon")
-            playagain_button = tk.Button(root, text='Play Again', cursor="exchange", font=("Comic Sans MS", 14),
-                                         width=15, height=2, command=lambda: [canvas.pack_forget(),
-                                                                              rungame(),
-                                                                              playagain_button.pack_forget(),
-                                                                              exit_button.pack_forget()])
+            canvas.create_text(
+                200,
+                230,
+                text="G a m e o v e r",
+                fill="lemon chiffon",
+                font=("Comic Sans MS", 30),
+            )
+            canvas.create_text(
+                190,
+                280,
+                text="Your score is ",
+                font=("Comic Sans MS", 20),
+                fill="lemon chiffon",
+            )
+            canvas.create_text(
+                275,
+                280,
+                text=" ͟ ͟",
+                font=("Comic Sans MS", 20),
+                fill="lemon chiffon",
+            )
+            canvas.create_text(
+                290,
+                280,
+                text="" + str(score),
+                font=("Comic Sans MS", 20),
+                fill="lemon chiffon",
+            )
+            playagain_button = tk.Button(
+                root,
+                text="Play Again",
+                cursor="exchange",
+                font=("Comic Sans MS", 14),
+                width=15,
+                height=2,
+                command=lambda: [
+                    canvas.pack_forget(),
+                    rungame(),
+                    playagain_button.pack_forget(),
+                    exit_button.pack_forget(),
+                ],
+            )
             playagain_button.pack()
-            exit_button = tk.Button(root, text='Exit', font=("Comic Sans MS", 14), width=15,
-                                    height=2, command=root.destroy)
+            exit_button = tk.Button(
+                root,
+                text="Exit",
+                font=("Comic Sans MS", 14),
+                width=15,
+                height=2,
+                command=root.destroy,
+            )
             exit_button.pack()
             score = 0
             # reset score to zero after every turn
@@ -131,118 +164,66 @@ def rungame():
         for obstacle in obstacles:
             canvas.move(obstacle, -15, 0)  # Move the obstacles faster (adjust the value as desired)
             obstacle_pos = canvas.coords(obstacle)
-            # if obstacle is off=-screen, remove it
+            # if obstacle is off-screen, remove it
             if obstacle_pos[2] < 0:
                 canvas.delete(obstacle)
                 obstacles.remove(obstacle)
                 score += 1
 
-        if random.randint(1, 10) == 1:
+        if elapsed_time - last_obstacle_time > obstacle_frequency / 1000:
             create_obstacle()
+            last_obstacle_time = elapsed_time
+
+            # Gradually reduce obstacle frequency until it reaches the maximum
+            if obstacle_frequency > max_obstacle_frequency:
+                obstacle_frequency -= 10
+
         canvas.move(player, 0, player_dy)
         canvas.after(50, update_game)  # Adjust the delay between game updates (lower value for faster updates)
 
     def start_game():
         """Starts the game by hiding the start menu and starting the game loop."""
 
-        player_velocity = [0]  # Store player's velocity as a list
         start_button.pack_forget()
         canvas.bind("<space>", jump)
         fall()
         update_game()
 
     # Create the canvas
-    canvas = tk.Canvas(root, width=400, height=400, bg="skyblue")
-    canvas.pack()
+    canvas = create_game_canvas(root)
 
-    # Set the focus on the canvas to receive key events
-    canvas.focus_set()
-
-    # the start of background art scene below
-    # Sun
-    canvas.create_oval(240, 50, 140, 155, fill="gold", outline="gold")
-    # rightside,top,left,bottom,
-
-    # clouds
-    # middle_lefttop_cloud
-    canvas.create_oval(200, 68, 120, 75, fill="papaya whip", outline="papaya whip")
-    # rightside,top,left,bottom
-    # middle_rightbottom_cloud
-    canvas.create_oval(230, 73, 155, 80, fill="papaya whip", outline="papaya whip")
-    # middle_leftbottom_cloud
-    canvas.create_oval(190, 73, 125, 80, fill="papaya whip", outline="papaya whip")
-    # middle_bottom_cloud
-    canvas.create_oval(210, 76, 140, 85, fill="papaya whip", outline="papaya whip")
-    # left_bottom_cloud
-    canvas.create_oval(65, 58, -20, 65, fill="papaya whip", outline="papaya whip")
-    # left_middle_cloud
-    canvas.create_oval(45, 50, -20, 61, fill="papaya whip", outline="papaya whip")
-    # left_middletop_cloud
-    canvas.create_oval(30, 45, -20, 54, fill="papaya whip", outline="papaya whip")
-    # left_top_cloud
-    canvas.create_oval(20, 40, -20, 50, fill="papaya whip", outline="papaya whip")
-    # right_middle_cloud
-    canvas.create_oval(390, 35, 310, 42, fill="papaya whip", outline="papaya whip")
-    # right_bottom_cloud
-    canvas.create_oval(410, 30, 330, 38, fill="papaya whip", outline="papaya whip")
-    # right_top_cloud
-    canvas.create_oval(410, 25, 350, 35, fill="papaya whip", outline="papaya whip")
-
-    # Light Purple Mountains
-    # *******************************
-    # lightpurp_mostleft_mount
-    canvas.create_polygon(120, 410, -100, 410, 30, 50, fill="#8F8FBC", outline="#8F8FBC")
-    # right corner, left corner, top corner^^
-    # lightpurp_left_mount
-    canvas.create_polygon(250, 410, 50, 410, 150, 100, fill="#8F8FBC", outline="#8F8FBC")
-    # lightpurp_leftslope_mount
-    canvas.create_polygon(250, 410, 100, 410, 180, 150, fill="#8F8FBC", outline="#8F8FBC")
-    # lightpurp_middle_mount
-    canvas.create_polygon(330, 410, 150, 410, 238, 120, fill="#8F8FBC", outline="#8F8FBC")
-    # lightpurp_right_mount
-    canvas.create_polygon(410, 410, 230, 410, 310, 70, fill="#8F8FBC", outline="#8F8FBC")
-    # lightpurp_mostright_mount
-    canvas.create_polygon(460, 410, 260, 410, 360, 135, fill="#8F8FBC", outline="#8F8FBC")
-
-    # Mid Purple Mountains
-    # *******************************
-    # midpurp_left1_mount
-    canvas.create_polygon(120, 410, -20, 410, 55, 125, fill="darkslateblue", outline="darkslateblue")
-    # right corner, left corner, top corner^^
-    # midpurp_left2_mount
-    canvas.create_polygon(230, 410, 30, 410, 120, 190, fill="darkslateblue", outline="darkslateblue")
-    # midpurp_left2_slope2_mount
-    canvas.create_polygon(250, 410, 70, 410, 160, 230, fill="darkslateblue", outline="darkslateblue")
-    # midpurp_left3_mount
-    canvas.create_polygon(310, 410, 180, 410, 240, 160, fill="darkslateblue", outline="darkslateblue")
-    # midpurp_middle_mount
-    canvas.create_polygon(340, 410, 230, 410, 280, 120, fill="darkslateblue", outline="darkslateblue")
-    # midpurp_right_mount
-    canvas.create_polygon(370, 410, 250, 410, 310, 200, fill="darkslateblue", outline="darkslateblue")
-    # midpurp_mostright_mount
-    canvas.create_polygon(435, 410, 280, 410, 350, 250, fill="darkslateblue", outline="darkslateblue")
-    # the end of background art scene
     global score
-    # Create the player
-    #player color change
+    # player color change
     player_color = random.randint(0, 2)
     if player_color == 0:
-        player = canvas.create_oval(170, 350, 220, 400, fill="blue", outline="white")
+        player = canvas.create_oval(
+            170, 350, 220, 400, fill="blue", outline="white"
+        )
     elif player_color == 1:
-        player = canvas.create_oval(170, 350, 220, 400, fill="green", outline="white")
+        player = canvas.create_oval(
+            170, 350, 220, 400, fill="green", outline="white"
+        )
     else:
-        player = canvas.create_oval(170, 350, 220, 400, fill="black", outline="white")
+        player = canvas.create_oval(
+            170, 350, 220, 400, fill="black", outline="white"
+        )
 
     # Create a list to store the obstacle objects
     obstacles = []
 
     # Create the start menu
-    start_button = tk.Button(root, text="Start", font=("Comic Sans MS", 14), width=15, height=2,
-                             command=start_game)
+    start_button = tk.Button(
+        root,
+        text="Start",
+        font=("Comic Sans MS", 14),
+        width=15,
+        height=2,
+        command=start_game,
+    )
     start_button.pack()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Creates main window for the game, rules, and welcome page canvas
     root = tk.Tk()
     root.geometry("500x500")
@@ -254,17 +235,34 @@ if __name__ == '__main__':
     opening_bg(welcomecanvas)
 
     # Creates the title on homepage
-    d = tk.Label(welcomecanvas, text="Welcome to Mountain Jump!", font=("Comic Sans MS", 18))
+    d = tk.Label(
+        welcomecanvas,
+        text="Welcome to Mountain Jump!",
+        font=("Comic Sans MS", 18),
+    )
     d.pack(pady=(160, 60))
 
     # Creates start game button
-    strt_button = tk.Button(welcomecanvas, text='Start Game', font=("Comic Sans MS", 14),
-    width=15, height=2, bg="skyblue", command=lambda: [rungame(), welcomecanvas.pack_forget()])
+    strt_button = tk.Button(
+        welcomecanvas,
+        text="Start Game",
+        font=("Comic Sans MS", 14),
+        width=15,
+        height=2,
+        bg="skyblue",
+        command=lambda: [rungame(), welcomecanvas.pack_forget()],
+    )
     strt_button.pack()
 
     # Creates see rules button
-    rules_button = tk.Button(welcomecanvas, text='See Rules', width=15, height=2,
-    font=("Comic Sans MS", 14), command=runrules)
+    rules_button = tk.Button(
+        welcomecanvas,
+        text="See Rules",
+        width=15,
+        height=2,
+        font=("Comic Sans MS", 14),
+        command=runrules,
+    )
     rules_button.pack(pady=15)
 
     # code below puts window in middle for user-- if this doesn't happen let me know
@@ -278,7 +276,7 @@ if __name__ == '__main__':
     a = (screen_width / 2) - (width / 2)
     b = (screen_height / 2) - (height / 2)
 
-    root.geometry('%dx%d+%d+%d' % (width, height, a, b))
+    root.geometry("%dx%d+%d+%d" % (width, height, a, b))
     # End of the code to center window for user
 
     root.mainloop()
