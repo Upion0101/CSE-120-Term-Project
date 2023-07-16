@@ -4,6 +4,7 @@ import random
 score = 0
 player_dy = 0
 
+
 def opening_bg(canvas2):
 
     # dark purple mountains left to right
@@ -38,11 +39,11 @@ def opening_bg(canvas2):
     canvas2.create_oval(50, 320, 250, 478, fill="dark green", outline="dark green")
     # right green hill
     canvas2.create_oval(230, 578, 550, 320, fill="dark green", outline="dark green")
-    #bottom light green hill
+    # bottom light green hill
     canvas2.create_oval(-50, 415, 550, 600, fill="forest green", outline="forest green")
     # river
     coord = 235, 415, 265, 415, 310, 500, 190, 500
-    arc = canvas2.create_polygon(coord, fill="skyblue", outline="skyblue" )
+    arc = canvas2.create_polygon(coord, fill="skyblue", outline="skyblue")
 
 
 def runrules():
@@ -54,10 +55,11 @@ def runrules():
     rulesmessage = tk.Message(rules_canvas, text=rules,  font=("Comic Sans MS", 16))
     rulesmessage.pack(pady=(120, 60))
     # Creates the go back button on the rules page
-    goback_button = tk.Button(rules_canvas, text='Go Back',  font=("Comic Sans MS", 14), width=15, height=2, command=lambda: [rules_canvas.pack_forget(),
-                                                                                       welcomecanvas.pack(fill=tk.BOTH, expand=True),
-                                                                                       opening_bg(welcomecanvas)])
+    goback_button = tk.Button(rules_canvas, text='Go Back',  font=("Comic Sans MS", 14), width=15, height=2,
+    command=lambda: [rules_canvas.pack_forget(), welcomecanvas.pack(fill=tk.BOTH, expand=True),
+                     opening_bg(welcomecanvas)])
     goback_button.pack(padx=10, pady=10)
+
 
 def rungame():
     def check_collision():
@@ -108,49 +110,18 @@ def rungame():
         global score
         if check_collision():
             canvas.unbind("<space>")
-            canvas.create_text(75, 200, text="╭━━━╮", fill="lemon chiffon")
-            canvas.create_text(75, 215, text="┃╭━╮┃", fill="lemon chiffon")
-            canvas.create_text(75, 230, text="┃┃╱╰╋", fill="lemon chiffon")
-            canvas.create_text(75, 245, text="┃┃╭━┫", fill="lemon chiffon")
-            canvas.create_text(75, 260, text="┃╰┻━┃", fill="lemon chiffon")
-            canvas.create_text(75, 275, text="╰━━━┻", fill="lemon chiffon")
-            canvas.create_text(125, 230, text="━━┳", fill="lemon chiffon")
-            canvas.create_text(125, 245, text="╭╮┃", fill="lemon chiffon")
-            canvas.create_text(125, 260, text="╭╮┃", fill="lemon chiffon")
-            canvas.create_text(125, 275, text="╯╰┻", fill="lemon chiffon")
-            canvas.create_text(165, 230, text="╮╭┳", fill="lemon chiffon")
-            canvas.create_text(165, 245, text="╰╯┃", fill="lemon chiffon")
-            canvas.create_text(165, 260, text="┃┃┃", fill="lemon chiffon")
-            canvas.create_text(165, 275, text="┻┻┻", fill="lemon chiffon")
-            canvas.create_text(205, 230, text="━━┳", fill="lemon chiffon")
-            canvas.create_text(205, 245, text="┃━┫", fill="lemon chiffon")
-            canvas.create_text(205, 260, text="┃━┫", fill="lemon chiffon")
-            canvas.create_text(205, 275, text="━━┻", fill="lemon chiffon")
-            canvas.create_text(240, 230, text="━━┳", fill="lemon chiffon")
-            canvas.create_text(240, 245, text="╭╮┃", fill="lemon chiffon")
-            canvas.create_text(240, 260, text="╰╯┣", fill="lemon chiffon")
-            canvas.create_text(240, 275, text="━━╯", fill="lemon chiffon")
-            canvas.create_text(273, 230, text="╮╭", fill="lemon chiffon")
-            canvas.create_text(280, 245, text="╰╯┃", fill="lemon chiffon")
-            canvas.create_text(280, 260, text="╮╭┫", fill="lemon chiffon")
-            canvas.create_text(280, 275, text="╰╯╰", fill="lemon chiffon")
-            canvas.create_text(320, 230, text="━━┳", fill="lemon chiffon")
-            canvas.create_text(320, 245, text="┃━┫", fill="lemon chiffon")
-            canvas.create_text(320, 260, text="┃━┫", fill="lemon chiffon")
-            canvas.create_text(320, 275, text="━━┻", fill="lemon chiffon")
-            canvas.create_text(350, 230, text="━╮", fill="lemon chiffon")
-            canvas.create_text(350, 245, text="╭╯", fill="lemon chiffon")
-            canvas.create_text(345, 260, text="┃", fill="lemon chiffon")
-            canvas.create_text(345, 275, text="╯", fill="lemon chiffon")
-            canvas.create_text(200, 300, text="Your score was " + str(score), font=("Helvetica", 24),
+            canvas.create_text(200, 230, text="G a m e o v e r", fill="lemon chiffon", font=("Comic Sans MS", 30))
+            canvas.create_text(190, 280, text="Your score is", font=("Comic Sans MS", 20),
                                fill="lemon chiffon")
+            canvas.create_text(275, 280, text=" ͟ ͟", font=("Comic Sans MS", 20), fill="lemon chiffon")
+            canvas.create_text(275, 280, text="" + str(score), font=("Comic Sans MS", 20), fill="lemon chiffon")
             playagain_button = tk.Button(root, text='Play Again', cursor="exchange", font=("Comic Sans MS", 14),
                                          width=15, height=2, command=lambda: [canvas.pack_forget(),
                                                                               rungame(),
                                                                               playagain_button.pack_forget(),
                                                                               exit_button.pack_forget()])
             playagain_button.pack()
-            exit_button = tk.Button(root, text='Exit', cursor="draft_large", font=("Comic Sans MS", 14), width=15,
+            exit_button = tk.Button(root, text='Exit', font=("Comic Sans MS", 14), width=15,
                                     height=2, command=root.destroy)
             exit_button.pack()
             score = 0
@@ -253,10 +224,10 @@ def rungame():
     # the end of background art scene
     global score
     # Create the player
+    #player color change
     player_color = random.randint(0, 2)
-    if score == 3:
+    if player_color == 0:
         player = canvas.create_oval(170, 350, 220, 400, fill="blue", outline="white")
-        score += 1
     elif player_color == 1:
         player = canvas.create_oval(170, 350, 220, 400, fill="green", outline="white")
     else:
@@ -266,10 +237,9 @@ def rungame():
     obstacles = []
 
     # Create the start menu
-    start_button = tk.Button(root, text="Start", cursor="draft_large", font=("Comic Sans MS", 14), width=15, height=2, command=start_game)
+    start_button = tk.Button(root, text="Start", font=("Comic Sans MS", 14), width=15, height=2,
+                             command=start_game)
     start_button.pack()
-
-
 
 
 if __name__ == '__main__':
@@ -277,7 +247,6 @@ if __name__ == '__main__':
     root = tk.Tk()
     root.geometry("500x500")
     root.title("Mountain Jump Game")
-
 
     # Creates the canvas that the homepage(buttons and welcome) will appear on
     welcomecanvas = tk.Canvas(root, bg="skyblue")
@@ -289,12 +258,13 @@ if __name__ == '__main__':
     d.pack(pady=(160, 60))
 
     # Creates start game button
-    strt_button = tk.Button(welcomecanvas, text='Start Game', cursor="draft_large", font=("Comic Sans MS", 14) , width=15, height=2, bg="skyblue", command=lambda: [rungame(),
-                                                                                         welcomecanvas.pack_forget()])
+    strt_button = tk.Button(welcomecanvas, text='Start Game', font=("Comic Sans MS", 14),
+    width=15, height=2, bg="skyblue", command=lambda: [rungame(), welcomecanvas.pack_forget()])
     strt_button.pack()
 
     # Creates see rules button
-    rules_button = tk.Button(welcomecanvas, text='See Rules', cursor="draft_large", width=15, height=2, font=("Comic Sans MS", 14), command=runrules)
+    rules_button = tk.Button(welcomecanvas, text='See Rules', width=15, height=2,
+    font=("Comic Sans MS", 14), command=runrules)
     rules_button.pack(pady=15)
 
     # code below puts window in middle for user-- if this doesn't happen let me know
@@ -312,4 +282,3 @@ if __name__ == '__main__':
     # End of the code to center window for user
 
     root.mainloop()
-
