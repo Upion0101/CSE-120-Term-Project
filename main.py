@@ -26,6 +26,7 @@ def runrules():
         font=("Comic Sans MS", 14),
         width=15,
         height=2,
+        cursor= "left_side",
         command=lambda: [rules_canvas.pack_forget(), welcomecanvas.pack(fill=tk.BOTH, expand=True),
                          opening_bg(welcomecanvas)],
     )
@@ -127,7 +128,7 @@ def rungame():
                 fill="lemon chiffon",
             )
             canvas.create_text(
-                290,
+                275,
                 280,
                 text="" + str(score),
                 font=("Comic Sans MS", 20),
@@ -228,6 +229,8 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.geometry("500x500")
     root.title("Mountain Jump Game")
+    # makes window unable to be resized by user
+    root.resizable(False, False)
 
     # Creates the canvas that the homepage(buttons and welcome) will appear on
     welcomecanvas = tk.Canvas(root, bg="skyblue")
