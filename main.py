@@ -26,7 +26,10 @@ def runrules():
     welcomecanvas.pack_forget()
     rules_canvas = tk.Canvas(root, bg="skyblue")
     rules_canvas.pack(fill=tk.BOTH, expand=True)
-    rules = 'Press <Space> to jump over obstacles'
+    rules = 'Press <Space> to jump over obstacles. Over the course of the game, obstacle generation and movement ' \
+            'increases. Hearts indicate the amount of lives you have left, and they are based on the amount of ' \
+            'collisions you have had. After three collisions, it will be game over, so make sure to pay attention ' \
+            'to your hearts!'
     rulesmessage = tk.Message(rules_canvas, text=rules, font=("Comic Sans MS", 16))
     rulesmessage.pack(pady=(120, 60))
     # Creates the go back button on the rules page
@@ -48,8 +51,8 @@ def rungame():
     last_obstacle_time = start_time
 
     def check_collision():
-        counter = 0
         """Checks if there is a collision between the player and any of the obstacles."""
+        counter = 0
         player_bbox = canvas.bbox(player)
         # makes the hiboxes smaller
         player_hitbox = [
@@ -73,17 +76,15 @@ def rungame():
                     player_hitbox[1] <= obstacle_hitbox[3]
             ):
                 counter += 1
-                for i in range(counter):
-                    ls.append(counter)
-                    if len(ls) == 0:
-                        print("3 hearts")
-                    elif len(ls) == 4:
-                        print("2 hearts")
-                    elif len(ls) == 8:
-                        print("1 hearts")
-                    elif len(ls) == 12:
-                        print("0 hearts")
-                        return True
+            for i in range(counter):
+                ls.append(counter)
+                if len(ls) == 4:
+                    canvas.delete(left_heart, left_heart2, left_heart3)
+                elif len(ls) == 8:
+                    canvas.delete(middle_heart, middle_heart2, middle_heart3)
+                elif len(ls) == 12:
+                    canvas.delete(right_heart, right_heart2, right_heart3)
+                    return True
         return False
 
     def create_obstacle():
@@ -152,14 +153,14 @@ def rungame():
             canvas.create_text(
                 275,
                 280,
-                text="" + str(score-2),
+                text="" + str(score - 2),
                 font=("Comic Sans MS", 20),
                 fill="lemon chiffon",
             )
             playagain_button = tk.Button(
                 root,
                 text="Back to Home",
-                cursor="exchange",
+                cursor="left_side",
                 font=("Comic Sans MS", 14),
                 width=15,
                 height=2,
@@ -214,8 +215,19 @@ def rungame():
 
     # Create the canvas
     canvas = create_game_canvas(root)
+    # Creates the hearts with each heart be made of three pieces (two ovals and a triangle)
+    right_heart = canvas.create_polygon(353, 19, 370, 30, 387, 19, fill="red", outline="red")
+    right_heart2 = canvas.create_oval(352, 10, 370, 22, fill="red", outline="red")
+    right_heart3 = canvas.create_oval(370, 10, 388, 22, fill="red", outline="red")
 
-    global score
+    middle_heart = canvas.create_polygon(318, 19, 335, 30, 352, 19, fill="red", outline="red")
+    middle_heart2 = canvas.create_oval(317, 10, 335, 22, fill="red", outline="red")
+    middle_heart3 = canvas.create_oval(335, 10, 353, 22, fill="red", outline="red")
+
+    left_heart = canvas.create_polygon(283, 19, 300, 30, 317, 19, fill="red", outline="red")
+    left_heart2 = canvas.create_oval(282, 10, 300, 22, fill="red", outline="red")
+    left_heart3 = canvas.create_oval(300, 10, 318, 22, fill="red", outline="red")
+
     # player color change
     player_color = random.randint(0, 2)
     if player_color == 0:
@@ -305,4 +317,5 @@ if __name__ == "__main__":
     # End of the code to center window for user
 
     root.mainloop()
+
     
