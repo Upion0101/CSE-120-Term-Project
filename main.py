@@ -1,6 +1,8 @@
 import tkinter as tk
 import random
 import time
+import sys
+import os
 from welcome import opening_bg
 from game_canvas import create_game_canvas
 
@@ -11,6 +13,14 @@ max_obstacle_frequency = 500  # Maximum obstacle frequency (0.5 obstacles per se
 last_obstacle_time = 0
 jump_height = -10
 fall_speed = 1
+ls = []
+
+
+def restart_program():
+    n = sys.executable
+    os.execl(n, n, *sys.argv)
+
+
 def runrules():
     # Removes the welcome page and displays the rules
     welcomecanvas.pack_forget()
@@ -26,20 +36,22 @@ def runrules():
         font=("Comic Sans MS", 14),
         width=15,
         height=2,
-        cursor= "left_side",
+        cursor="left_side",
         command=lambda: [rules_canvas.pack_forget(), welcomecanvas.pack(fill=tk.BOTH, expand=True),
                          opening_bg(welcomecanvas)],
     )
     goback_button.pack(padx=10, pady=10)
+
 
 def rungame():
     start_time = time.time()
     last_obstacle_time = start_time
 
     def check_collision():
+        counter = 0
         """Checks if there is a collision between the player and any of the obstacles."""
         player_bbox = canvas.bbox(player)
-        #makes the hiboxes smaller
+        # makes the hiboxes smaller
         player_hitbox = [
             player_bbox[0] + 10,
             player_bbox[1] + 10,
@@ -60,7 +72,18 @@ def rungame():
                     player_hitbox[3] >= obstacle_hitbox[1] and
                     player_hitbox[1] <= obstacle_hitbox[3]
             ):
-                return True
+                counter += 1
+                for i in range(counter):
+                    ls.append(counter)
+                    if len(ls) == 0:
+                        print("3 hearts")
+                    elif len(ls) == 4:
+                        print("2 hearts")
+                    elif len(ls) == 8:
+                        print("1 hearts")
+                    elif len(ls) == 12:
+                        print("0 hearts")
+                        return True
         return False
 
     def create_obstacle():
@@ -83,7 +106,6 @@ def rungame():
         if player_pos[3] == canvas.winfo_height():
             player_dy = jump_height
             canvas.move(player, 0, player_dy)
-
 
     def fall():
         """Makes the player fall down after a jump."""
@@ -130,22 +152,22 @@ def rungame():
             canvas.create_text(
                 275,
                 280,
-                text="" + str(score),
+                text="" + str(score-2),
                 font=("Comic Sans MS", 20),
                 fill="lemon chiffon",
             )
             playagain_button = tk.Button(
                 root,
-                text="Play Again",
+                text="Back to Home",
                 cursor="exchange",
                 font=("Comic Sans MS", 14),
                 width=15,
                 height=2,
                 command=lambda: [
                     canvas.pack_forget(),
-                    rungame(),
                     playagain_button.pack_forget(),
                     exit_button.pack_forget(),
+                    restart_program()
                 ],
             )
             playagain_button.pack()
@@ -283,3 +305,4 @@ if __name__ == "__main__":
     # End of the code to center window for user
 
     root.mainloop()
+    
