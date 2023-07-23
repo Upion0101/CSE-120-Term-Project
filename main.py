@@ -26,10 +26,10 @@ def runrules():
     welcomecanvas.pack_forget()
     rules_canvas = tk.Canvas(root, bg="skyblue")
     rules_canvas.pack(fill=tk.BOTH, expand=True)
-    rules = 'Press <Space> to jump over obstacles. Over the course of the game, obstacle generation and movement ' \
+    rules = 'Press <Space> to jump over obstacles "\u25B2" . Over the course of the game, obstacle generation and movement ' \
             'increases. Hearts indicate the amount of lives you have left, and they are based on the amount of ' \
             'collisions you have had. After three collisions, it will be game over, so make sure to pay attention ' \
-            'to your hearts!'
+            'to your \u2764\uFE0F'"'s"' !'
     rulesmessage = tk.Message(rules_canvas, text=rules, font=("Comic Sans MS", 16))
     rulesmessage.pack(pady=(120, 60))
     # Creates the go back button on the rules page
