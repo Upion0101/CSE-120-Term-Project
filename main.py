@@ -94,8 +94,8 @@ def rungame():
         triangle_height = 50  # Adjust the triangle height as desired
         obstacle = canvas.create_polygon(
             x, y_base - triangle_height,  # Tip
-            x - 20, y_base,  # Left corner
-            x + 20, y_base,  # Right corner
+               x - 20, y_base,  # Left corner
+               x + 20, y_base,  # Right corner
             fill="red",
         )
         obstacles.append(obstacle)
@@ -220,13 +220,13 @@ def rungame():
     right_heart2 = canvas.create_oval(352, 10, 370, 22, fill="red", outline="red")
     right_heart3 = canvas.create_oval(370, 10, 388, 22, fill="red", outline="red")
 
-    middle_heart = canvas.create_polygon(318, 19, 335, 30, 352, 19, fill="red", outline="red")
-    middle_heart2 = canvas.create_oval(317, 10, 335, 22, fill="red", outline="red")
-    middle_heart3 = canvas.create_oval(335, 10, 353, 22, fill="red", outline="red")
+    middle_heart = canvas.create_polygon(313, 19, 330, 30, 347, 19, fill="red", outline="red")
+    middle_heart2 = canvas.create_oval(312, 10, 330, 22, fill="red", outline="red")
+    middle_heart3 = canvas.create_oval(330, 10, 348, 22, fill="red", outline="red")
 
-    left_heart = canvas.create_polygon(283, 19, 300, 30, 317, 19, fill="red", outline="red")
-    left_heart2 = canvas.create_oval(282, 10, 300, 22, fill="red", outline="red")
-    left_heart3 = canvas.create_oval(300, 10, 318, 22, fill="red", outline="red")
+    left_heart = canvas.create_polygon(273, 19, 290, 30, 307, 19, fill="red", outline="red")
+    left_heart2 = canvas.create_oval(272, 10, 290, 22, fill="red", outline="red")
+    left_heart3 = canvas.create_oval(290, 10, 308, 22, fill="red", outline="red")
 
     # player color change
     player_color = random.randint(0, 2)
@@ -317,5 +317,6 @@ if __name__ == "__main__":
     # End of the code to center window for user
 
     root.mainloop()
+
 
     
